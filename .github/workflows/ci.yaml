@@ -57,3 +57,9 @@ jobs:
       - run: npm ci
 
       - run: npx tsc --noEmit
+        id: tsc
+        continue-on-error: true
+
+      - name: Check on failures
+        if: steps.tsc.outputs.status != 'failure'
+        run: exit 1
