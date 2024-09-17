@@ -1,0 +1,16 @@
+diff --git a/src/build/bcd.ts b/src/build/bcd.ts
+index e6bc633..0d6079a 100644
+--- a/src/build/bcd.ts
++++ b/src/build/bcd.ts
+@@ -34,6 +34,11 @@ function isSuitable(
+   parentKey?: string,
+   prefix?: string,
+ ) {
++  if (compat?.mdn_url?.includes("PerformanceObserver")) {
++    if (compat?.mdn_url?.includes("supportedEntryTypes")) {
++      return false;
++    }
++  }
+   const forceAlive = parentKey
+     ? forceKeepAlive[parentKey]?.includes(key)
+     : !!forceKeepAlive[key];

@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [opened, synchronize, reopened]
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          cache: "npm"
+
+      - name: Setup TypeScript-DOM-lib-generator
+        run: |
+          patch -p1 < ../patches/bcd.ts.patch
+          npm ci
+          npm run build
+          cp generated/dom.generated.d.ts ../generated/dom/index.d.ts
+        working-directory: TypeScript-DOM-lib-generator
+
+      - run: npm ci
+
+      - run: npx tsc --noEmit
